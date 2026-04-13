@@ -7,7 +7,7 @@ class DokumaYukle(BaseModel):  #miras aldık
     yuklenme_tarihi : datetime = datetime.now() # opsiyonel gönderilmezse otomatik şu anki zamanı alır
     dosya_turu : str   # zorunlu pdf mi txt vb mi olacak
 
-class DokumanCevap(BaseModel):
+class DokumanCevap(BaseModel): #bu model apı cevabı için 
     id: int
     dosya_adi: str
     dosya_turu : str
