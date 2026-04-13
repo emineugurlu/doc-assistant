@@ -39,7 +39,7 @@ def metni_parcala(metin : str, parca_boyutu: int = 1000) -> list[str]:
 
 
 def dosyayi_isle(dosya_adi: str, dosya_icerigi: bytes) -> dict:
-    dosya_turu = dosya_adi.split(".")[-1].lower()
+    dosya_turu = dosya_adi.split(".")[-1].lower()  #dosya adını noktalara böl ve son elemanını al ve küçük harfe çevir
 
     if dosya_turu == "pdf":
         metin = pdf_oku(dosya_icerigi)
