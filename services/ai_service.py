@@ -4,12 +4,12 @@ from dotenv import load_dotenv
 
 load_dotenv()  # .env dosyasını oku 
 
-GEMİNİ_API_KEY = os.getenv("GEMINI_API_KEY")  # .env dosyasının içindeki gemini_pi_key değerini al
-genai.configure(api_key=GEMİNİ_API_KEY)  #geminiye bu key ile bağlan
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")  # .env dosyasının içindeki gemini_pi_key değerini al
+genai.configure(api_key=GEMINI_API_KEY)  #geminiye bu key ile bağlan
 
-model = genai.GenerativeModel("gemini-1.5-flash")
+model = genai.GenerativeModel("gemini-2.5-flash")
 def ai_ile_konyc(dokuman_icerigi: str, kullanici_sorusu: str)-> str: # context yaptık sınırlandırdık
-    if not GEMİNİ_API_KEY:
+    if not GEMINI_API_KEY:
         raise ValueError("GEMINI_API_KEY bulunamadi, .env dosyasını kontrol et")
     try :
         prompt = f"""
