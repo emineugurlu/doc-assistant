@@ -3,7 +3,7 @@ async function dokumanlariGetir() {
         // FastAPI'deki listeleme endpoint'ine istek atıyoruz
         const response = await fetch('http://127.0.0.1:8000/upload/listele');
         const data = await response.json();
-        
+
         const listeContainer = document.getElementById('dokuman-listesi');
         if (!listeContainer) return; // Eğer HTML'de o ID yoksa dur
 
@@ -15,7 +15,7 @@ async function dokumanlariGetir() {
             const renk = d.dosya_turu === 'pdf' ? 'text-purple-400' : 'text-blue-400';
             const bg = d.dosya_turu === 'pdf' ? 'bg-purple-900/30' : 'bg-blue-900/30';
 
-           const kart = `
+            const kart = `
              <div onclick="dokumanSec(${d.id}, '${d.dosya_adi}')" 
                 class="bg-[#2a2a3d] p-3 rounded-xl flex items-center gap-3 border border-transparent hover:border-purple-500 cursor-pointer transition-all active:scale-95">
                 <div class="${bg} ${renk} p-2 rounded-lg">
@@ -70,14 +70,15 @@ fileInput.addEventListener('change', async (e) => {
 });
 let seciliDokumanId = null;
 
-function dokumanSec(id,ad){
+function dokumanSec(id, ad) {
     seciliDokumanId = id;
-    console.log("Seçilen Doküman ID : ",id);
+    console.log("Seçilen Doküman ID : ", id);
 
-    const headerTitle = document.querySelector('header input');
-    if(headerTitle){
-        headerTitle.ariaPlaceholder=`${ad} içinde ara ...`;
+    const headerTitle = document.getElementById('seleceted-doc-name');
+    if (headerTitle) {
+        headerTitle.textContent = `${ad} -- aktif doküman`;
     }
 
-    alert(ad + "doküman seçildi! Artık buna göre soru sorabilirsiniz.");
+    console.log("Seçilen döküman:", ad, "ID:", id);
 }
+
