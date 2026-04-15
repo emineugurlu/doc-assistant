@@ -1,12 +1,10 @@
-// --- DEĞİŞKENLER ---
+// --- DEĞİŞKENLER VE DURUM YÖNETİMİ ---
 let seciliDokumanId = null;
-const uploadBtn = document.getElementById('upload-btn');
-const fileInput = document.getElementById('file-input');
-const sendBtn = document.getElementById('send-btn');
-const userInput = document.getElementById('user-input');
-const chatMessages = document.getElementById('chat-messages');
 
-// --- 1. DOKÜMAN LİSTELEME ---
+// Sayfa ilk yüklendiğinde listeyi getir
+window.onload = dokumanlariGetir;
+
+// --- 1. DOKÜMANLARI LİSTELEME ---
 async function dokumanlariGetir() {
     try {
         const response = await fetch('http://127.0.0.1:8000/upload/listele');
@@ -15,21 +13,22 @@ async function dokumanlariGetir() {
         const listeContainer = document.getElementById('dokuman-listesi');
         if (!listeContainer) return;
 
-        listeContainer.innerHTML = ''; // Listeyi temizle
+        listeContainer.innerHTML = ''; // Eski listeyi temizle
 
         data.veriler.forEach(d => {
             const ikon = d.dosya_turu === 'pdf' ? 'fa-file-pdf' : 'fa-file-lines';
             const renk = d.dosya_turu === 'pdf' ? 'text-purple-400' : 'text-blue-400';
             const bg = d.dosya_turu === 'pdf' ? 'bg-purple-900/30' : 'bg-blue-900/30';
 
+            // DİKKAT: 'this' parametresi seçilen kartı parlatmak için şart!
             const kart = `
-                <div onclick="dokumanSec(${d.id}, '${d.dosya_adi}')" 
-                     class="bg-[#2a2a3d] p-3 rounded-xl flex items-center gap-3 border border-transparent hover:border-purple-500 cursor-pointer transition-all active:scale-95 mb-2">
+                <div onclick="dokumanSec(${d.id}, '${d.dosya_adi}', this)" 
+                     class="dokuman-kart bg-[#2a2a3d] p-3 rounded-xl flex items-center gap-3 border-2 border-transparent hover:border-purple-500/50 cursor-pointer transition-all mb-2">
                     <div class="${bg} ${renk} p-2 rounded-lg">
                         <i class="fas ${ikon}"></i>
                     </div>
-                    <div>
-                        <p class="text-sm font-medium text-white">${d.dosya_adi}</p>
+                    <div class="flex-1">
+                        <p class="text-sm font-medium text-white truncate w-40">${d.dosya_adi}</p>
                         <p class="text-[10px] text-gray-500">ID: ${d.id}</p>
                     </div>
                 </div>
@@ -37,76 +36,47 @@ async function dokumanlariGetir() {
             listeContainer.innerHTML += kart;
         });
     } catch (error) {
-        console.error('Veri çekerken hata oluştu:', error);
+        console.error('Liste yüklenirken hata:', error);
     }
 }
 
-// --- 2. DOKÜMAN SEÇME ---
+// --- 2. DOKÜMAN SEÇME VE GÖRSEL EFEKT ---
 function dokumanSec(id, ad, element) {
     seciliDokumanId = id;
 
-    // 1. Önce daha önce seçilmiş olan kartların stilini temizle
+    // Önce tüm kartların seçili stilini temizle
     const tumKartlar = document.querySelectorAll('.dokuman-kart');
-    tumKartlar.forEach(kart => {
-        kart.classList.remove('border-purple-500', 'bg-[#35354d]');
-        kart.classList.add('border-transparent', 'bg-[#2a2a3d]');
+    tumKartlar.forEach(k => {
+        k.classList.remove('border-purple-500', 'bg-[#35354d]');
+        k.classList.add('border-transparent', 'bg-[#2a2a3d]');
     });
 
-    // 2. Tıklanan karta seçili stilini ekle
+    // Sadece tıkladığımız kartı seçili yap (Mor çerçeve)
     element.classList.remove('border-transparent', 'bg-[#2a2a3d]');
     element.classList.add('border-purple-500', 'bg-[#35354d]');
 
-    // 3. Başlığı güncelle
+    // Üstteki başlığı güncelle
     const headerTitle = document.getElementById('seleceted-doc-name');
     if (headerTitle) {
-        headerTitle.textContent = `${ad} - aktif doküman`;
+        headerTitle.textContent = `${ad} - aktif`;
     }
-    
-    console.log("Seçilen Doküman ID:", id);
 }
 
-// --- 3. DOSYA YÜKLEME ---
-uploadBtn.addEventListener('click', () => fileInput.click());
-
-fileInput.addEventListener('change', async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    const formData = new FormData();
-    formData.append('dosya', file);
-
-    try {
-        const response = await fetch('http://127.0.0.1:8000/upload/', {
-            method: 'POST',
-            body: formData
-        });
-
-        if (response.ok) {
-            alert("Dosya başarıyla yüklendi!");
-            dokumanlariGetir(); // Listeyi yenile
-        } else {
-            const error = await response.json();
-            alert("Hata: " + error.detail);
-        }
-    } catch (error) {
-        console.error("Yükleme hatası:", error);
-    }
-});
-
-// --- 4. MESAJ GÖNDERME ---
+// --- 3. MESAJ GÖNDERME ---
 async function mesajGonder() {
-    const soru = userInput.value.trim(); // DÜZELTİLDİ: .value kullanıldı
+    const userInput = document.getElementById('user-input');
+    const soru = userInput.value.trim();
     
     if (!soru) return;
     
     if (!seciliDokumanId) {
-        alert("Önce bir doküman seç!");
+        alert("Lütfen önce listeden bir belge seç!");
         return;
     }
 
-    // Kullanıcı mesajını ekrana ekle
+    // Kullanıcı mesajını ekrana ekle ve kutuyu boşalt
     mesajEkle(soru, 'user');
-    userInput.value = ''; // Inputu temizle
+    userInput.value = '';
 
     try {
         const response = await fetch('http://127.0.0.1:8000/chat/', {
@@ -119,53 +89,96 @@ async function mesajGonder() {
         });
 
         const data = await response.json();
-
         if (response.ok) {
             mesajEkle(data.cevap, 'ai');
         } else {
-            mesajEkle("Hata: " + (data.detail || "Bir sorun oluştu"), 'ai');
+            mesajEkle("Hata: " + (data.detail || "Sunucu hatası"), 'ai');
         }
     } catch (error) {
-        console.error("Chat Hatası:", error);
-        mesajEkle("Sunucuya bağlanılamadı.", 'ai');
+        mesajEkle("Sunucuya bağlanılamadı. FastAPI çalışıyor mu?", 'ai');
     }
 }
 
-// Buton tıklama ve Enter tuşu desteği
-sendBtn.addEventListener('click', mesajGonder);
-userInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') mesajGonder();
-});
+// --- 4. DOSYA YÜKLEME ---
+const uploadBtn = document.getElementById('upload-btn');
+const fileInput = document.getElementById('file-input');
+
+if (uploadBtn) {
+    uploadBtn.addEventListener('click', () => fileInput.click());
+}
+
+if (fileInput) {
+    fileInput.addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append('dosya', file);
+
+        try {
+            const response = await fetch('http://127.0.0.1:8000/upload/', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (response.ok) {
+                alert("Dosya başarıyla yüklendi!");
+                dokumanlariGetir(); // Listeyi otomatik yenile
+            }
+        } catch (error) {
+            console.error("Yükleme hatası:", error);
+        }
+    });
+}
 
 // --- 5. MESAJI EKRANA YAZDIRMA ---
 function mesajEkle(metin, kimden) {
+    const chatMessages = document.getElementById('chat-messages');
     if (!chatMessages) return;
 
     const div = document.createElement('div');
-    div.className = 'mb-4 flex flex-col'; // Mesajlar arası boşluk ve yönlendirme
-
+    
+    // Mesajın kullanıcıdan mı yoksa AI'dan mı geldiğine göre stil ver
     if (kimden === 'user') {
+        // KULLANICI MESAJI (Sağa Yaslı, Mor)
+        div.className = 'flex flex-col items-end w-full mb-6'; // mb-6 ile arayı açtık
         div.innerHTML = `
-            <div class="bg-[#5b36d6] text-white p-4 rounded-2xl max-w-[80%] self-end ml-auto">
-                <p class="text-sm">${metin}</p>
+            <span class="text-[10px] text-gray-600 mb-1 mr-2">Sen</span>
+            <div class="bg-[#5b36d6] text-white p-4 rounded-3xl rounded-tr-none max-w-[70%] shadow-lg">
+                <p class="text-sm leading-relaxed">${metin}</p>
             </div>
         `;
     } else {
+        // AI MESAJI (Sola Yaslı, Koyu Gri + Etiket)
+        div.className = 'flex flex-col items-start w-full mb-6';
         div.innerHTML = `
-            <div class="bg-[#1e1e2f] text-white p-4 rounded-2xl max-w-[80%] self-start border border-gray-800">
-                <p class="text-sm">${metin}</p>
+            <span class="text-[10px] bg-blue-500/10 text-blue-400 px-2.5 py-1 rounded-full mb-2 flex items-center gap-1.5 border border-blue-500/10">
+                <span class="w-1.5 h-1.5 bg-blue-400 rounded-full"></span> Gemini 2.5
+            </span>
+            <div class="bg-[#1e1e2f] text-gray-200 p-4 rounded-3xl rounded-tl-none border border-gray-800 max-w-[80%] shadow-lg">
+                <p class="text-sm leading-relaxed">${metin}</p>
             </div>
         `;
     }
 
     chatMessages.appendChild(div);
     
-    // Otomatik aşağı kaydır
+    // En alta kaydır (smooth bir şekilde)
     chatMessages.scrollTo({
         top: chatMessages.scrollHeight,
         behavior: 'smooth'
     });
 }
 
-// Sayfa ilk açıldığında dokümanları listele
-window.onload = dokumanlariGetir;
+// --- EVENT LISTENERS (DİĞER) ---
+const sendBtn = document.getElementById('send-btn');
+if (sendBtn) {
+    sendBtn.addEventListener('click', mesajGonder);
+}
+
+const inputAlan = document.getElementById('user-input');
+if (inputAlan) {
+    inputAlan.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') mesajGonder();
+    });
+}
