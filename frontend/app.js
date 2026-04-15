@@ -82,3 +82,16 @@ function dokumanSec(id, ad) {
     console.log("Seçilen döküman:", ad, "ID:", id);
 }
 
+const sendBtn = document.getElementById('send-btn');
+const userInput = document.getElementById('user-input');
+
+sendBtn.addEventListener('click', mesajGonder);
+
+async function mesajGonder(){
+    const soru = userInput.ariaValueMax.trim();
+    if(!soru) return ;
+    if(!seciliDokumanId) {
+        alert("Önce bir doküman seç !");
+        return;
+    }
+}
