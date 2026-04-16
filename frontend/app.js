@@ -21,16 +21,25 @@ async function dokumanlariGetir() {
             const bg = d.dosya_turu === 'pdf' ? 'bg-purple-900/30' : 'bg-blue-900/30';
 
             // DİKKAT: 'this' parametresi seçilen kartı parlatmak için şart!
-            const kart = `
+           const kart = `
                 <div onclick="dokumanSec(${d.id}, '${d.dosya_adi}', this)" 
-                     class="dokuman-kart bg-[#2a2a3d] p-3 rounded-xl flex items-center gap-3 border-2 border-transparent hover:border-purple-500/50 cursor-pointer transition-all mb-2">
-                    <div class="${bg} ${renk} p-2 rounded-lg">
+                     class="group relative dokuman-kart bg-[#2a2a3d] p-3 rounded-xl flex items-center gap-3 border-2 border-transparent hover:border-purple-500/50 cursor-pointer transition-all mb-2">
+                    
+                    <div class="${bg} ${renk} p-2 rounded-lg shrink-0">
                         <i class="fas ${ikon}"></i>
                     </div>
-                    <div class="flex-1">
-                        <p class="text-sm font-medium text-white truncate w-40">${d.dosya_adi}</p>
-                        <p class="text-[10px] text-gray-500">ID: ${d.id}</p>
+                    
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm font-medium text-white truncate pr-6">${d.dosya_adi}</p>
+                        <p class="text-[10px] text-gray-500 font-mono">ID: ${d.id}</p>
                     </div>
+
+                    <button 
+                        onclick="event.stopPropagation(); dokumanSil(${d.id})" 
+                        class="absolute right-3 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 p-2 text-gray-400 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-all z-10"
+                    >
+                        <i class="fas fa-trash-alt text-sm"></i>
+                    </button>
                 </div>
             `;
             listeContainer.innerHTML += kart;
@@ -181,4 +190,23 @@ if (inputAlan) {
     inputAlan.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') mesajGonder();
     });
+}
+
+async function dokumanSil(id) {
+    // Adresin Swagger'dakiyle birebir aynı olması şart!
+    const url = `http://127.0.0.1:8000/upload/sil/${id}`;
+    
+    try {
+        const response = await fetch(url, { method: 'DELETE' });
+
+        if (response.ok) {
+            console.log("Silme başarılı, liste yenileniyor...");
+            // LİSTEYİ YENİLE (Bu olmazsa silindiğini göremezsin)
+            await dokumanlariGetir(); 
+        } else {
+            console.error("Sunucu silme isteğini reddetti.");
+        }
+    } catch (error) {
+        console.error("Bağlantı hatası:", error);
+    }
 }

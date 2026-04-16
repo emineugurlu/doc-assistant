@@ -66,3 +66,35 @@ async def dokumanlari_listele(db: Session=Depends(get_db)): #veritabanının kap
             detail=f"Listeleme sırasında hata oluştu : {str(e)}"
         )
 
+
+@router.delete("/sil/{id}") # Adresi temizledik: /upload/sil/{id} olacak
+async def dokuman_sil(id: int, db: Session = Depends(get_db)):
+    try:
+        # 1. Dokümanı veritabanında ara
+        dokuman = db.query(Dokuman).filter(Dokuman.id == id).first()
+        
+        # 2. Eğer doküman yoksa hata döndür
+        if not dokuman:
+            raise HTTPException(
+                status_code=404, 
+                detail=f"ID: {id} olan doküman bulunamadı"
+            )
+        
+        # 3. Veritabanından sil ve kaydet (COMMIT ŞART!)
+        db.delete(dokuman)
+        db.commit() 
+        
+        print(f"BAŞARILI: {id} ID'li döküman veritabanından silindi.")
+        
+        return {
+            "status": "success", 
+            "message": f"ID {id} olan doküman başarıyla silindi."
+        }
+        
+    except Exception as e:
+        db.rollback() # Bir hata olursa işlemi geri al
+        print(f"HATA OLUŞTU: {str(e)}")
+        raise HTTPException(
+            status_code=500, 
+            detail=f"Silme sırasında sunucu hatası: {str(e)}"
+        )
