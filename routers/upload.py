@@ -74,11 +74,12 @@ async def dokuman_sil(id: int, db: Session = Depends(get_db)):
         dokuman = db.query(Dokuman).filter(Dokuman.id == id).first()
         
         # 2. Eğer doküman yoksa hata döndür
-        if not dokuman:
-            raise HTTPException(
-                status_code=404, 
-                detail=f"ID: {id} olan doküman bulunamadı"
-            )
+        
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Sunucu hatası : {str(e)}"
+        )
         
         # 3. Veritabanından sil ve kaydet (COMMIT ŞART!)
         db.delete(dokuman)
