@@ -160,7 +160,7 @@ async function mesajGonder() {
 
     if (!seciliDokumanId) {
 
-        alert("Lütfen önce listeden bir belge seç!");
+        toastGoster("Önce bir döküman seç!", 'hata')
 
         return;
 
@@ -264,7 +264,7 @@ if (fileInput) {
 
             if (response.ok) {
 
-                alert("Dosya başarıyla yüklendi!");
+                toastGoster("Dosya başarıyla yüklendi!", 'basari')
 
                 dokumanlariGetir(); // Listeyi otomatik yenile
 
@@ -430,7 +430,7 @@ async function dokumanSil(id) {
 
 async function hızlıAksiyon(tip) {
 
-    if (!seciliDokumanId) return alert("Önce bir doküman seçmelisin bebişim!");
+    if (!seciliDokumanId) { toastGoster("Önce bir döküman seç!", 'hata'); return; }
 
    
 
@@ -456,3 +456,18 @@ async function hızlıAksiyon(tip) {
 
 }
 
+function toastGoster(metin, tip = 'bilgi') {
+    const renkler = {
+        'basari': 'bg-green-500/20 border-green-500/30 text-green-400',
+        'hata': 'bg-red-500/20 border-red-500/30 text-red-400',
+        'bilgi': 'bg-purple-500/20 border-purple-500/30 text-purple-400'
+    }
+    
+    const toast = document.createElement('div');
+    toast.className = `fixed bottom-6 right-6 px-4 py-3 rounded-xl border text-sm font-medium z-50 animate-fade-in ${renkler[tip]}`;
+    toast.textContent = metin;
+    
+    document.body.appendChild(toast);
+    
+    setTimeout(() => toast.remove(), 3000);
+}
