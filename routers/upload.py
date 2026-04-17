@@ -34,7 +34,7 @@ async def dosya_yukle(   #asekron fonksiyon dosya yüklenirken başka istekleri 
 
         return{
             "mesaj" : "Dosya başarıyla yükledi",
-            "id " : yeni_dokuman.id,
+            "id" : yeni_dokuman.id,
             "dosya_adi": yeni_dokuman.dosya_adi,
             "parca_sayisi": sonuc["parca_sayisi"]
         }

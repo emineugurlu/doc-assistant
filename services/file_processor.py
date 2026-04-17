@@ -31,7 +31,7 @@ def metni_parcala(metin : str, parca_boyutu: int = 1000) -> list[str]:
         if kes_noktasi == -1:
             kes_noktasi = parca_boyutu
         parcalar.append(metin[:kes_noktasi].strip())
-        metin=metin[:kes_noktasi].strip()
+        metin=metin[kes_noktasi:].strip()
     if metin :
         parcalar.append(metin)
 
