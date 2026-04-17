@@ -471,3 +471,98 @@ function toastGoster(metin, tip = 'bilgi') {
     
     setTimeout(() => toast.remove(), 3000);
 }
+
+// --- ARAMA ---
+const aramaInput = document.querySelector('input[placeholder="Dokümanlarda ara..."]');
+
+if (aramaInput) {
+    let aramaZamanlayici;
+    
+    aramaInput.addEventListener('input', (e) => {
+        const kelime = e.target.value.trim();
+        
+        clearTimeout(aramaZamanlayici);
+        
+        if (kelime.length < 2) {
+            aramaTemizle();
+            return;
+        }
+        
+        aramaZamanlayici = setTimeout(() => {
+            aramaYap(kelime);
+        }, 400);
+    });
+}
+
+async function aramaYap(kelime) {
+    try {
+        const response = await fetch(`http://127.0.0.1:8000/search/?kelime=${encodeURIComponent(kelime)}`);
+        const data = await response.json();
+        
+        aramaTemizle();
+        
+        if (data.bulunan_dokuman_sayisi === 0) {
+            toastGoster(`"${kelime}" bulunamadı`, 'hata');
+            return;
+        }
+        
+        aramaPanel(data);
+        
+    } catch (error) {
+        console.error("Arama hatası:", error);
+    }
+}
+
+function aramaPanel(data) {
+    const mevcutPanel = document.getElementById('arama-panel');
+    if (mevcutPanel) mevcutPanel.remove();
+    
+    const panel = document.createElement('div');
+    panel.id = 'arama-panel';
+    panel.className = 'absolute top-16 right-4 w-96 bg-[#1e1e2f] border border-gray-700 rounded-2xl shadow-2xl z-50 overflow-hidden';
+    
+    panel.innerHTML = `
+        <div class="p-4 border-b border-gray-800 flex items-center justify-between">
+            <p class="text-xs text-gray-400">
+                <span class="text-purple-400 font-bold">${data.bulunan_dokuman_sayisi}</span> 
+                dökümanda bulundu
+            </p>
+            <button onclick="aramaTemizle()" class="text-gray-600 hover:text-white transition-all">
+                <i class="fas fa-times text-xs"></i>
+            </button>
+        </div>
+        <div class="max-h-80 overflow-y-auto p-3 space-y-3">
+            ${data.sonuclar.map(s => `
+                <div onclick="dokumanSecById(${s.id}, '${s.dosya_adi}')" 
+                     class="p-3 rounded-xl bg-[#2a2a3d] hover:border-purple-500 border border-transparent cursor-pointer transition-all">
+                    <p class="text-xs font-bold text-purple-400 mb-2">
+                        <i class="fas fa-file mr-1"></i>${s.dosya_adi}
+                    </p>
+                    ${s.eslesen_parcalar.map(p => `
+                        <p class="text-xs text-gray-400 bg-[#121212] p-2 rounded-lg mb-1 leading-relaxed">${p}</p>
+                    `).join('')}
+                </div>
+            `).join('')}
+        </div>
+    `;
+    
+    document.querySelector('header').appendChild(panel);
+}
+
+function aramaTemizle() {
+    const panel = document.getElementById('arama-panel');
+    if (panel) panel.remove();
+}
+
+function dokumanSecById(id, ad) {
+    aramaTemizle();
+    
+    const kartlar = document.querySelectorAll('.dokuman-kart');
+    kartlar.forEach(k => {
+        if (k.getAttribute('onclick').includes(`${id},`)) {
+            k.click();
+        }
+    });
+    
+    toastGoster(`${ad} seçildi`, 'basari');
+}

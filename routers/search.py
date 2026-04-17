@@ -37,7 +37,7 @@ async def ara(
                 "id":dokuman.id,
                 "dosya_adi":dokuman.dosya_adi,
                 "dosya_turu": dokuman.dosya_turu,
-                "eslenesen_parcalar":parcalar
+                "eslesen_parcalar": parcalar 
             })
         return {
             "aranan_kelime":kelime,
