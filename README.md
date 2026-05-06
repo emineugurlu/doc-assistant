@@ -48,9 +48,9 @@ This project showcases advanced backend orchestration and AI service integration
 ## ⚙️ Installation & Setup
 
 1. **Clone the Repository:**
-   ```bash
-   git clone [https://github.com/emineugurlu/doc-assistant.git](https://github.com/emineugurlu/doc-assistant.git)
-   cd doc-assistant
+ ```bash
+  git clone [https://github.com/emineugurlu/doc-assistant.git](https://github.com/emineugurlu/doc-assistant.git)
+  cd doc-assistant
    ````
    
 2.**Environment Configuration:**
@@ -58,11 +58,11 @@ Create a .env file and add your GEMINI_API_KEY.
 
 3.**Install Dependencies:**
   ````bash
-   pip install -r requirements.txt
+  pip install -r requirements.txt
   ````
 4.**Launch the Server:**
 ````bash
-    uvicorn main:app --reload
+  uvicorn main:app --reload
 ````
 
 Developed by Emine Uğurlu - Computer Engineer
