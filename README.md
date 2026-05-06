@@ -58,11 +58,11 @@ Create a .env file and add your GEMINI_API_KEY.
 
 3.**Install Dependencies:**
   ````bash
-  pip install -r requirements.txt
+   pip install -r requirements.txt
   ````
 4.**Launch the Server:**
 ````bash
-  uvicorn main:app --reload
+    uvicorn main:app --reload
 ````
 
 Developed by Emine Uğurlu - Computer Engineer
