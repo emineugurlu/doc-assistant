@@ -62,7 +62,7 @@ Create a .env file and add your GEMINI_API_KEY.
   ````
 4.**Launch the Server:**
 ````bash
-uvicorn main:app --reload
+  uvicorn main:app --reload
 ````
 
 Developed by Emine Uğurlu - Computer Engineer
