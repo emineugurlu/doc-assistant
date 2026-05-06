@@ -1,87 +1,69 @@
-# Doc Assistant 📄🤖
+# 📄🤖 Doc Assistant: Intelligent Document Analysis Ecosystem
 
-> AI-powered document analysis platform that allows users to upload PDF/TXT files, generate summaries, search content, and ask intelligent questions about their documents instantly.
+> **"A high-performance, AI-driven platform designed to revolutionize document interaction. By leveraging the Gemini API and a robust FastAPI backend, Doc Assistant enables users to distill complex PDF/TXT data into actionable insights through automated summarization and semantic Q&A."**
+
+![AI](https://img.shields.io/badge/AI-Gemini%20API-blueviolet?style=for-the-badge&logo=google-gemini&logoColor=white)
+![Backend](https://img.shields.io/badge/Backend-FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)
+![Database](https://img.shields.io/badge/Database-SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white)
+![Status](https://img.shields.io/badge/Status-Active-success?style=for-the-badge)
+
+**Doc Assistant** is a professional-grade analysis tool developed by **Emine Uğurlu**. It addresses the challenge of information overload by providing a scalable environment for instant document parsing, keyword search, and intelligent dialogue with static files.
 
 ---
 
-## 🚀 Preview
+## 🚀 Engineering & AI Excellence
 
-<img width="1900" height="866" alt="image" src="https://github.com/user-attachments/assets/e4ab7db1-a8ab-4657-9e4a-5e849786acfe" />
+This project showcases advanced backend orchestration and AI service integration:
 
-✨ Features
-📄 Upload PDF and TXT documents
-🤖 AI-generated summaries
-💬 Ask questions about uploaded documents
-🔍 Search keywords inside files
-🗂️ View uploaded document list
-🗑️ Delete documents
-⚡ Fast and responsive interface
-🧠 Gemini AI integration
-🏗️ Clean and scalable backend architecture
+* **Gemini AI Integration:** Implementation of sophisticated prompt engineering within `ai_service.py` to deliver high-context summaries and precise Q&A.
+* **Asynchronous Backend Architecture:** Utilizing **FastAPI** to manage non-blocking I/O operations for seamless file uploads and real-time AI processing.
+* **Document Parsing Engine:** Robust text extraction and chunking logic for PDF and TXT formats handled by a dedicated `file_processor.py`.
+* **Relational Data Management:** Structured storage of document metadata and user interactions using **SQLite** with efficient CRUD operations.
+* **Scalable Routing Layer:** Modular API design with separate routers for AI chat, search, and document management.
 
-🛠️ Tech Stack
-Backend
-FastAPI
-Python
-SQLite
-Pydantic
-AI
-Gemini API
-Frontend
-HTML
-CSS
-JavaScript
+## ✨ Core Features
 
-📁 Project Structure
-DOC-ASSISTANT/
-├── frontend/               # User interface components
-│   ├── index.html          # Main application page
-│   └── app.js              # API request handling and dynamic UI logic
-├── routers/                # API Endpoints (Routing Layer)
-│   ├── ai_chat.py          # Logic for Gemini-powered chat interactions
-│   ├── search.py           # In-document keyword search engine
-│   └── upload.py           # File upload and document management
-├── services/               # Business Logic Layer
-│   ├── ai_service.py       # Gemini API integration and prompt engineering
-│   └── file_processor.py   # PDF/TXT parsing and text chunking logic
-├── .env                    # Environment variables (API Keys, Secrets)
-├── .gitignore              # Files to be excluded from Version Control
-├── database.py             # SQLite connection and CRUD operations
-├── doc_assistant.db        # Local SQLite database file
-├── LICENSE                 # Project licensing information
-├── main.py                 # Application entry point (FastAPI/Flask)
-├── models.py               # Pydantic/SQLAlchemy data models
-├── README.md               # Project documentation
-└── requirements.txt        # List of Python dependencies
+* 🧠 **Semantic Q&A:** Ask complex questions and receive context-aware answers directly from your documents.
+* 📝 **Automated Summarization:** Instantly generate executive summaries for long-form PDF and TXT files.
+* 🔍 **Precision Search:** Deep-file keyword search engine to locate critical information across your library.
+* 🗂️ **Document Management:** Fully interactive dashboard to upload, view, and manage your analyzed documents.
 
-⚙️ Installation
-git clone https://github.com/emineugurlu/doc-assistant.git
+## 📸 Interface Showcase
 
-cd doc-assistant
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/e4ab7db1-a8ab-4657-9e4a-5e849786acfe" width="100%" alt="Doc Assistant Platform Preview" />
+</p>
 
-pip install -r requirements.txt
+---
 
+## 🛠️ Tech Stack
+
+* **Backend:** FastAPI, Python, Pydantic.
+* **AI Engine:** Google Gemini API.
+* **Database:** SQLite.
+* **Frontend:** HTML5, CSS3, JavaScript (Vanilla).
+
+---
+
+## ⚙️ Installation & Setup
+
+1. **Clone the Repository:**
+   ```bash
+   git clone [https://github.com/emineugurlu/doc-assistant.git](https://github.com/emineugurlu/doc-assistant.git)
+   cd doc-assistant
+   ````
+   
+2.**Environment Configuration:**
+Create a .env file and add your GEMINI_API_KEY.
+
+3.**Install Dependencies:**
+  ````bash
+  pip install -r requirements.txt
+  ````
+4.**Launch the Server:**
+````bash
 uvicorn main:app --reload
+````
 
-🧪 How to Use
-1️⃣ Upload a PDF or TXT file
-2️⃣ Select your document
-3️⃣ Ask questions to AI
-4️⃣ Generate summaries
-5️⃣ Search any keyword inside document
-
-🧠 Why This Project?
-This project was built to simplify document reading and analysis using artificial intelligence.
-Instead of manually reading long files, users can upload documents and instantly:
-Understand content faster
-Get summaries
-Ask direct questions
-Find important information quickly
-
-👩‍💻 Developer
-
-Emine Uğurlu
-Computer Engineer
-
-⭐ Support
-If you like this project, give it a star ⭐ on GitHub
+Developed by Emine Uğurlu - Computer Engineer
+Empowering document intelligence through advanced engineering.
