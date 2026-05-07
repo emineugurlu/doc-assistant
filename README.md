@@ -49,7 +49,7 @@ This project showcases advanced backend orchestration and AI service integration
 
 1. **Clone the Repository:**
  ```bash
-  git clone (https://github.com/emineugurlu/doc-assistant.git)
+  git clone https://github.com/emineugurlu/doc-assistant
   cd doc-assistant
    ````
    
